@@ -50,7 +50,7 @@ export function FormRenderer({ form }: FormRendererProps) {
     e.preventDefault()
 
     if (validateForm()) {
-      console.log("[v0] Form submitted:", { formId: form.id, data: formData })
+      console.log("[OpenForm] Form submitted:", { formId: form.id, data: formData })
       setIsSubmitted(true)
     }
   }
