@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, CheckCircle, Zap, Shield, BarChart } from "lucide-react"
+import { ArrowRight, CheckCircle, Zap, Shield, BarChart, Github, Mail, Instagram } from "lucide-react"
 
 export default function LandingPage() {
   return (
@@ -9,14 +9,20 @@ export default function LandingPage() {
       <header className="border-b">
         <div className="container mx-auto flex items-center justify-between px-6 py-4">
           <div className="text-xl font-bold">G'GRIMS OpenForm</div>
-          <nav className="flex items-center gap-4">
-            <Link href="/dashboard">
-              <Button variant="ghost">Dashboard</Button>
-            </Link>
-            <Link href="/dashboard/new">
-              <Button>Get Started</Button>
-            </Link>
-          </nav>
+           <nav className="flex items-center gap-4">
+             <Link href="https://github.com/G-GRIMS/openform" target="_blank" rel="noopener noreferrer">
+               <Button variant="ghost" size="sm" className="gap-2">
+                 <Github className="h-4 w-4" />
+                 GitHub
+               </Button>
+             </Link>
+             <Link href="/dashboard">
+               <Button variant="ghost">Dashboard</Button>
+             </Link>
+             <Link href="/dashboard/new">
+               <Button>Get Started</Button>
+             </Link>
+           </nav>
         </div>
       </header>
 
@@ -105,12 +111,105 @@ export default function LandingPage() {
         </Link>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t py-8">
-        <div className="container mx-auto px-6 text-center text-sm text-muted-foreground">
-          © 2025 G'GRIMS OpenForm. Open source form builder.
-        </div>
-      </footer>
+       {/* Footer */}
+       <footer className="border-t bg-muted/30">
+         <div className="container mx-auto px-6 py-12">
+           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+             {/* Project Links */}
+             <div>
+               <h3 className="font-semibold text-foreground mb-4">Project Links</h3>
+               <div className="space-y-2">
+                 <Link
+                   href="https://github.com/G-GRIMS/openform"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                 >
+                   GitHub Repository
+                 </Link>
+                 <Link
+                   href="https://github.com/G-GRIMS/openform/blob/main/CONTRIBUTING.md"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                 >
+                   Contributing Guidelines
+                 </Link>
+                 <Link
+                   href="https://github.com/G-GRIMS/openform/issues"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                 >
+                   Report Issues
+                 </Link>
+                 <Link
+                   href="https://github.com/G-GRIMS/openform/blob/main/README.md"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                 >
+                   Documentation
+                 </Link>
+               </div>
+             </div>
+
+             {/* Connect */}
+             <div>
+               <h3 className="font-semibold text-foreground mb-4">Connect</h3>
+               <div className="space-y-2">
+                 <Link
+                   href="mailto:contact@ggrims.com"
+                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                 >
+                   <Mail className="h-4 w-4" />
+                   contact@ggrims.com
+                 </Link>
+                 <Link
+                   href="https://instagram.com/g.grims_"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                 >
+                   <Instagram className="h-4 w-4" />
+                   @g.grims_
+                 </Link>
+               </div>
+             </div>
+
+             {/* Legal/Info */}
+             <div>
+               <h3 className="font-semibold text-foreground mb-4">Legal & Info</h3>
+               <div className="space-y-2">
+                 <Link
+                   href="https://github.com/G-GRIMS/openform/blob/main/LICENSE"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+                 >
+                   License (MIT)
+                 </Link>
+                 <div className="text-sm text-muted-foreground">
+                   Version 0.1.0
+                 </div>
+               </div>
+             </div>
+
+             {/* About */}
+             <div>
+               <h3 className="font-semibold text-foreground mb-4">About OpenForm</h3>
+               <p className="text-sm text-muted-foreground leading-relaxed">
+                 An open-source form builder focused on simplicity and flexibility.
+                 Built with Next.js, React, and TypeScript.
+               </p>
+             </div>
+           </div>
+
+           <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
+             © 2025 G'GRIMS OpenForm. Open source form builder. Made with ❤️ by the community.
+           </div>
+         </div>
+       </footer>
     </div>
   )
 }
