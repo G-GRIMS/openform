@@ -1,30 +1,135 @@
-# G'GRIMS OpenForm
+# OpenForm
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Built with Next.js](https://img.shields.io/badge/Built%20with-Next.js-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/jesslyn-lain-shears-projects/v0-g-grims-open-form)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/1QKSHcfdAUQ)
+An open-source form builder with a focus on simplicity and flexibility. Create stunning forms with our intuitive drag-and-drop interface and powerful features.
 
-## Overview
+![OpenForm Screenshot](./public/placeholder.jpg)
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+## ✨ Features
 
-## Deployment
+- **Drag & Drop Interface** - Build forms effortlessly with our intuitive drag-and-drop form builder
+- **Multiple Field Types** - Support for text, email, phone, date, textarea, checkbox, radio, select, toggle, and image upload fields
+- **Form Logic** - Add conditional logic to show/hide fields based on user responses
+- **Real-time Preview** - See your form changes instantly with live preview
+- **Analytics Dashboard** - Track form performance with detailed submission analytics
+- **Responsive Design** - Forms that work perfectly on all devices
+- **Dark Mode Support** - Built-in dark mode for better user experience
+- **TypeScript** - Full TypeScript support for better development experience
 
-Your project is live at:
+## 🚀 Tech Stack
 
-**[https://vercel.com/jesslyn-lain-shears-projects/v0-g-grims-open-form](https://vercel.com/jesslyn-lain-shears-projects/v0-g-grims-open-form)**
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Styling**: Tailwind CSS, shadcn/ui, Radix UI
+- **Forms**: React Hook Form, Zod validation
+- **Icons**: Lucide React
+- **Analytics**: Vercel Analytics
+- **Deployment**: Vercel
 
-## Build your app
+## 📦 Installation
 
-Continue building your app on:
+### Prerequisites
 
-**[https://v0.app/chat/projects/1QKSHcfdAUQ](https://v0.app/chat/projects/1QKSHcfdAUQ)**
+- Node.js 18+
+- pnpm (recommended) or npm
 
-## How It Works
+### Quick Start
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/G-GRIMS/openform.git
+   cd openform
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   # or
+   npm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   pnpm dev
+   # or
+   npm run dev
+   ```
+
+4. **Open your browser**
+
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 📖 Usage
+
+### Creating Your First Form
+
+1. Visit the dashboard at `/dashboard`
+2. Click "Create New Form"
+3. Use the drag-and-drop interface to add fields from the left panel
+4. Configure field settings in the right panel
+5. Add form logic if needed
+6. Preview your form and publish when ready
+
+### Form Field Types
+
+- **Text**: Single-line text input
+- **Email**: Email address input with validation
+- **Phone**: Phone number input
+- **Date**: Date picker
+- **Textarea**: Multi-line text input
+- **Checkbox**: Multiple choice checkboxes
+- **Radio**: Single choice radio buttons
+- **Select**: Dropdown selection
+- **Toggle**: Yes/No toggle switch
+- **Image Upload**: File upload for images
+
+### Form Logic
+
+Add conditional logic to show or hide fields based on user responses:
+
+1. Select a field in the form builder
+2. Click "Add Logic" in the settings panel
+3. Define conditions and actions
+4. Test the logic in preview mode
+
+## 🛣️ Roadmap
+
+- [ ] Form templates library
+- [ ] Advanced analytics and reporting
+- [ ] Form collaboration features
+- [ ] API integrations (webhooks, Zapier)
+- [ ] Multi-language support
+- [ ] Form branching logic
+- [ ] Advanced validation rules
+- [ ] Form theming customization
+- [ ] Mobile app companion
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
+
+- Setting up your development environment
+- Code style guidelines
+- Submitting pull requests
+- Reporting issues
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with [v0.app](https://v0.app) for rapid prototyping
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Icons from [Lucide](https://lucide.dev/)
+
+## 📞 Contact
+
+- **Project Link**: [https://github.com/G-GRIMS/openform](https://github.com/G-GRIMS/openform)
+- **Issues**: [https://github.com/G-GRIMS/openform/issues](https://github.com/G-GRIMS/openform/issues)
+
+---
+
+<p align="center">Made with ❤️ by the OpenForm community</p>
