@@ -1,15 +1,18 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { X, Bold, Italic, Link } from "lucide-react"
 
 export function FormSettings({ field, onUpdate }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false)
+  const [linkData, setLinkData] = useState({ url: '', text: '' })
 
   const insertMarkdown = (prefix, suffix = '') => {
     const textarea = textareaRef.current
@@ -31,11 +34,14 @@ export function FormSettings({ field, onUpdate }) {
   }
 
   const insertLink = () => {
-    const url = prompt('Enter URL:')
-    if (!url) return
-    const text = prompt('Enter link text:', 'link')
-    if (!text) return
-    insertMarkdown(`[${text}](${url})`)
+    setIsLinkDialogOpen(true)
+  }
+
+  const handleLinkSubmit = () => {
+    if (!linkData.url.trim() || !linkData.text.trim()) return
+    insertMarkdown(`[${linkData.text}](${linkData.url})`)
+    setLinkData({ url: '', text: '' })
+    setIsLinkDialogOpen(false)
   }
   const handleAddOption = () => {
     const newOptions = [...(field.options || []), `Option ${(field.options?.length || 0) + 1}`]
@@ -183,6 +189,49 @@ export function FormSettings({ field, onUpdate }) {
           </div>
         </div>
       )}
+
+      {/* Link Dialog */}
+      <Dialog open={isLinkDialogOpen} onOpenChange={setIsLinkDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Insert Link</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="link-text" className="text-sm font-medium">
+                Link Text
+              </Label>
+              <Input
+                id="link-text"
+                value={linkData.text}
+                onChange={(e) => setLinkData(prev => ({ ...prev, text: e.target.value }))}
+                placeholder="Enter link text"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="link-url" className="text-sm font-medium">
+                URL
+              </Label>
+              <Input
+                id="link-url"
+                value={linkData.url}
+                onChange={(e) => setLinkData(prev => ({ ...prev, url: e.target.value }))}
+                placeholder="https://example.com"
+                className="mt-1"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsLinkDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleLinkSubmit} disabled={!linkData.url.trim() || !linkData.text.trim()}>
+              Insert Link
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
