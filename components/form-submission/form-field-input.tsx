@@ -11,6 +11,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Upload } from "lucide-react"
 import { useState } from "react"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 interface FormFieldInputProps {
   field: FormField
@@ -157,6 +159,19 @@ export function FormFieldInput({ field, value, onChange, error }: FormFieldInput
         {field.label}
         {field.required && <span className="text-destructive ml-1">*</span>}
       </Label>
+      {field.description && (
+        <div className="text-sm text-muted-foreground prose prose-sm max-w-none">
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
+            a: ({ href, children }) => (
+              <a href={href} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                {children}
+              </a>
+            )
+          }}>
+            {field.description}
+          </ReactMarkdown>
+        </div>
+      )}
       {renderField()}
       {error && <p className="text-sm text-destructive">{error}</p>}
     </div>

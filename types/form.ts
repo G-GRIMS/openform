@@ -19,16 +19,17 @@ export interface LogicRule {
 }
 
 export interface FormField {
-  id: string
-  type: FieldType
-  label: string
-  placeholder?: string
-  required: boolean
-  options?: string[]
-  maxSize?: number
-  acceptedFormats?: string[]
-  logic?: LogicRule[] // Added logic rules to control field visibility
-}
+   id: string
+   type: FieldType
+   label: string
+   placeholder?: string
+   description?: string
+   required: boolean
+   options?: string[]
+   maxSize?: number
+   acceptedFormats?: string[]
+   logic?: LogicRule[] // Added logic rules to control field visibility
+ }
 
 export interface Form {
   id: string

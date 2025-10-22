@@ -1,12 +1,42 @@
 "use client"
 
+import { useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
+import { Textarea } from "@/components/ui/textarea"
+import { X, Bold, Italic, Link } from "lucide-react"
 
 export function FormSettings({ field, onUpdate }) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const insertMarkdown = (prefix, suffix = '') => {
+    const textarea = textareaRef.current
+    if (!textarea) return
+
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const selectedText = field.description?.substring(start, end) || ''
+    const newText = prefix + selectedText + suffix
+    const newValue = field.description?.substring(0, start) + newText + field.description?.substring(end) || ''
+
+    onUpdate({ description: newValue })
+
+    // Set cursor position after the inserted text
+    setTimeout(() => {
+      textarea.selectionStart = textarea.selectionEnd = start + newText.length
+      textarea.focus()
+    }, 0)
+  }
+
+  const insertLink = () => {
+    const url = prompt('Enter URL:')
+    if (!url) return
+    const text = prompt('Enter link text:', 'link')
+    if (!text) return
+    insertMarkdown(`[${text}](${url})`)
+  }
   const handleAddOption = () => {
     const newOptions = [...(field.options || []), `Option ${(field.options?.length || 0) + 1}`]
     onUpdate({ options: newOptions })
@@ -56,6 +86,31 @@ export function FormSettings({ field, onUpdate }) {
           />
         </div>
       )}
+
+      {/* Description */}
+      <div>
+        <Label className="text-xs font-semibold text-muted-foreground mb-2 block">Description</Label>
+        <div className="space-y-2">
+          <div className="flex gap-1">
+            <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => insertMarkdown('**', '**')}>
+              <Bold className="w-4 h-4" />
+            </Button>
+            <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => insertMarkdown('*', '*')}>
+              <Italic className="w-4 h-4" />
+            </Button>
+            <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => insertLink()}>
+              <Link className="w-4 h-4" />
+            </Button>
+          </div>
+          <Textarea
+            ref={textareaRef}
+            value={field.description || ''}
+            onChange={(e) => onUpdate({ description: e.target.value })}
+            placeholder="Add a description with **bold**, *italic*, or [links](url)"
+            className="text-sm min-h-[80px]"
+          />
+        </div>
+      </div>
 
       {/* Required */}
       <div className="flex items-center gap-2">
