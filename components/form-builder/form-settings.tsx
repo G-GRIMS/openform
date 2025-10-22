@@ -20,9 +20,10 @@ export function FormSettings({ field, onUpdate }) {
 
     const start = textarea.selectionStart
     const end = textarea.selectionEnd
-    const selectedText = field.description?.substring(start, end) || ''
+    const currentDesc = field.description || ''
+    const selectedText = currentDesc.substring(start, end)
     const newText = prefix + selectedText + suffix
-    const newValue = field.description?.substring(0, start) + newText + field.description?.substring(end) || ''
+    const newValue = currentDesc.substring(0, start) + newText + currentDesc.substring(end)
 
     onUpdate({ description: newValue })
 
