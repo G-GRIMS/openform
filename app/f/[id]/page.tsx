@@ -1,22 +1,16 @@
-import { notFound } from 'next/navigation';
+import React from 'react';
 import { FormRenderer } from '@/components/form-submission/form-renderer';
-import { getFormById } from '@/lib/data/forms';
 
-export default async function PublicFormPage({
+export default function PublicFormPage({
     params,
 }: {
     params: Promise<{ id: string }>;
 }) {
-    const { id } = await params;
-    const form = getFormById(id);
-
-    if (!form) {
-        notFound();
-    }
+    const { id } = React.use(params);
 
     return (
         <div className="bg-background min-h-screen">
-            <FormRenderer form={form} />
+            <FormRenderer formId={id} />
         </div>
     );
 }
