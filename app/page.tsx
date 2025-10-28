@@ -9,9 +9,12 @@ import {
     Github,
     Mail,
     Instagram,
+    Home,
 } from 'lucide-react';
 import Image from 'next/image';
 import { Fragment } from 'react';
+import { cn } from '@/lib/utils';
+import { lora } from '@/lib/fonts';
 
 export default function LandingPage() {
     return (
@@ -51,13 +54,23 @@ export default function LandingPage() {
                                     className="gap-2"
                                 >
                                     <Github className="h-4 w-4" />
-                                    GitHub
+                                    <span className="hidden md:block">
+                                        GitHub
+                                    </span>
                                 </Button>
                             </Link>
                             <Link href="/dashboard">
-                                <Button variant="ghost">Dashboard</Button>
+                                <Button variant="ghost">
+                                    <Home className="h-4 w-4" />
+                                    <span className="hidden md:block">
+                                        Dashboard
+                                    </span>
+                                </Button>
                             </Link>
-                            <Link href="/dashboard/new">
+                            <Link
+                                href="/dashboard/new"
+                                className="hidden md:block"
+                            >
                                 <Button>Get Started</Button>
                             </Link>
                         </nav>
@@ -68,14 +81,17 @@ export default function LandingPage() {
                 <section className="containerd px-6 py-20">
                     <div className="flex flex-col items-center gap-8">
                         <div className="text-center">
-                            <h1 className="text-5xl leading-tight font-medium tracking-tight">
+                            <h1
+                                className={cn(
+                                    'text-5xl leading-tight font-medium tracking-tight',
+                                    lora.className,
+                                )}
+                            >
                                 Build Beautiful Forms
                                 <br />
-                                <span className="text-muted-foreground">
-                                    In Minutes, Not Hours
-                                </span>
+                                In Minutes, Not Hours
                             </h1>
-                            <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg leading-relaxed md:mx-0">
+                            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-800 md:mx-0">
                                 An open-source form builder with a focus on
                                 simplicity and flexibility. Create stunning
                                 forms with our intuitive drag-and-drop interface
@@ -89,7 +105,11 @@ export default function LandingPage() {
                                     </Button>
                                 </Link>
                                 <Link href="/f/contact-form">
-                                    <Button size="lg" variant="outline">
+                                    <Button
+                                        size="lg"
+                                        variant="outline"
+                                        className="border-zinc-400 text-zinc-800"
+                                    >
                                         View Demo
                                     </Button>
                                 </Link>
@@ -108,7 +128,7 @@ export default function LandingPage() {
                 </section>
 
                 {/* Features Section */}
-                <section className="bg-muted/30 containerd border-t py-20">
+                <section className="bg-muted/30 containerd border-t border-zinc-400 py-20">
                     <div className="container mx-auto px-6">
                         <h2 className="text-center text-3xl font-bold">
                             Why Choose OpenForm?
@@ -183,7 +203,7 @@ export default function LandingPage() {
                 </section>
 
                 {/* Footer */}
-                <footer className="bg-muted/30 border-t">
+                <footer className="bg-muted/30 border-t border-zinc-400">
                     <div className="containerd px-6 py-12">
                         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                             {/* Project Links */}
@@ -285,7 +305,7 @@ export default function LandingPage() {
                             </div>
                         </div>
 
-                        <div className="border-border text-muted-foreground mt-8 border-t pt-8 text-center text-sm">
+                        <div className="text-muted-foreground mt-8 border-t border-zinc-400 pt-8 text-center text-sm">
                             © 2025 G'GRIMS OpenForm. Open source form builder.
                             Made with ❤️ by the community.
                         </div>
