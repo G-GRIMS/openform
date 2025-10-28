@@ -8,6 +8,8 @@
  * @module
  */
 
+import type * as CustomPassword from "../CustomPassword.js";
+import type * as ResendOTPPasswordReset from "../ResendOTPPasswordReset.js";
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
 
@@ -26,6 +28,8 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  CustomPassword: typeof CustomPassword;
+  ResendOTPPasswordReset: typeof ResendOTPPasswordReset;
   auth: typeof auth;
   http: typeof http;
 }>;
