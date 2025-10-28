@@ -43,30 +43,34 @@ Thank you for your interest in contributing to OpenForm! We welcome contribution
 ### Local Development
 
 1. **Clone your fork**
-   ```bash
-   git clone https://github.com/G-GRIMS/openform.git
-   cd openform
-   ```
+
+    ```bash
+    git clone https://github.com/G-GRIMS/openform.git
+    cd openform
+    ```
 
 2. **Install dependencies**
-   ```bash
-   pnpm install
-   ```
+
+    ```bash
+    pnpm install
+    ```
 
 3. **Start development server**
-   ```bash
-   pnpm dev
-   ```
+
+    ```bash
+    pnpm dev
+    ```
 
 4. **Run linting**
-   ```bash
-   pnpm lint
-   ```
+
+    ```bash
+    pnpm lint
+    ```
 
 5. **Build for production**
-   ```bash
-   pnpm build
-   ```
+    ```bash
+    pnpm build
+    ```
 
 ### Project Structure
 
@@ -106,14 +110,14 @@ openform/
 
 ```typescript
 // React imports first
-import * as React from 'react'
-import { useState } from 'react'
+import * as React from 'react';
+import { useState } from 'react';
 
 // External libraries
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
 
 // Internal imports
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 ```
 
 ### Styling
@@ -169,16 +173,16 @@ Examples:
 
 1. **Create a PR** from your feature branch to `main`
 2. **Fill out the PR template** with:
-   - Clear title and description
-   - Screenshots for UI changes
-   - Testing instructions
-   - Related issues
+    - Clear title and description
+    - Screenshots for UI changes
+    - Testing instructions
+    - Related issues
 
 3. **Ensure**:
-   - Code passes all linting checks
-   - Tests pass (when available)
-   - No TypeScript errors
-   - Code follows style guidelines
+    - Code passes all linting checks
+    - Tests pass (when available)
+    - No TypeScript errors
+    - Code follows style guidelines
 
 4. **Request review** from maintainers
 5. **Address feedback** and make necessary changes
@@ -209,22 +213,28 @@ docs: Update API documentation
 - Code snippets if relevant
 
 **Template:**
+
 ```markdown
 ## Bug Description
+
 Brief description of the bug
 
 ## Steps to Reproduce
+
 1. Go to '...'
 2. Click on '...'
 3. See error
 
 ## Expected Behavior
+
 What should happen
 
 ## Actual Behavior
+
 What actually happens
 
 ## Environment
+
 - Browser: [e.g., Chrome 91]
 - OS: [e.g., macOS 12.1]
 - Version: [e.g., v1.0.0]

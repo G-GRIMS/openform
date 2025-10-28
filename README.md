@@ -38,28 +38,31 @@ An open-source form builder with a focus on simplicity and flexibility. Create s
 ### Quick Start
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/G-GRIMS/openform.git
-   cd openform
-   ```
+
+    ```bash
+    git clone https://github.com/G-GRIMS/openform.git
+    cd openform
+    ```
 
 2. **Install dependencies**
-   ```bash
-   pnpm install
-   # or
-   npm install
-   ```
+
+    ```bash
+    pnpm install
+    # or
+    npm install
+    ```
 
 3. **Start the development server**
-   ```bash
-   pnpm dev
-   # or
-   npm run dev
-   ```
+
+    ```bash
+    pnpm dev
+    # or
+    npm run dev
+    ```
 
 4. **Open your browser**
 
-   Navigate to [http://localhost:3000](http://localhost:3000)
+    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## 📖 Usage
 
