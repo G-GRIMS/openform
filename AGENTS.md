@@ -3,53 +3,47 @@
 ## Build Commands
 
 - `pnpm build` - Build production bundle
-- `pnpm dev` - Start development server
-- `pnpm lint` - Run ESLint (no custom config, uses defaults)
-- `pnpm start` - Start production server
+- `pnpm dev` - Start development server (don't run this)
+- `pnpm lint` - Run ESLint
+- `pnpm start` - Start production server (don't run this)
+- No test framework configured
 
 ## Code Style Guidelines
 
-### Framework & Libraries
-
-- Next.js 15 with React 19, TypeScript (strict mode enabled)
-- shadcn/ui components (new-york style) with Tailwind CSS + CSS variables
-- Radix UI primitives, Lucide icons, class-variance-authority
-- Path aliases: `@/components`, `@/lib`, `@/lib/utils`, `@/components/ui`, `@/hooks`
+- **Framework**: Next.js 15, React 19, TypeScript (strict mode)
+- **UI**: shadcn/ui (new-york), Tailwind CSS, Radix UI, Lucide icons
+- **Path aliases**: `@/components`, `@/lib`, `@/lib/utils`, `@/components/ui`, `@/hooks`
 
 ### Imports & Structure
 
 - Client components: `"use client"` directive at top
 - React imports: `import * as React from 'react'`
 - Use `@/` aliases for internal imports, relative paths for same-directory
-- Group imports: React/React hooks, external libs, internal components/utils
+- Group imports: React/hooks, external libs, internal components/utils
 
 ### Naming Conventions
 
-- Components: PascalCase (e.g., `FormBuilder`, `Button`)
-- Functions/variables: camelCase (e.g., `addField`, `selectedFieldId`)
+- Components: PascalCase (e.g., `FormBuilder`)
+- Functions/variables: camelCase (e.g., `addField`)
 - Files: kebab-case for components (e.g., `form-builder.tsx`), camelCase for utils
-- Props: camelCase, boolean props with `is`/`has` prefixes when appropriate
+- Props: camelCase, boolean props with `is`/`has` prefixes
 
 ### TypeScript
 
 - Strict mode enabled, leverage type inference
-- Define interfaces for data structures in `types/` directory
+- Define interfaces in `types/` directory
 - Use union types for enums, optional properties with `?`
-- Generic `Record<string, any>` for flexible objects
-- Properly type state arrays: `useState<FormField[]>([])` instead of `useState([])`
+- Properly type state: `useState<FormField[]>([])`
 
 ### Styling
 
-- Tailwind CSS classes with responsive prefixes
-- Use `cn()` utility from `@/lib/utils` for conditional classes
+- Tailwind CSS with responsive prefixes
+- Use `cn()` utility for conditional classes
 - Component variants via `class-variance-authority`
 - Dark mode support with CSS variables
 
-### Error Handling
+### Additional Rules
 
-- No specific patterns observed - handle errors appropriately per component context
-- Use TypeScript strict mode to catch type errors at compile time
-
-### Testing
-
-- No test framework configured - add tests as needed with preferred framework
+- Follow Cursor rules in `.cursor/rules/convex_rules.mdc` for Convex functions
+- Run `pnpm lint` after code changes to ensure compliance
+- No specific error handling patterns - use TypeScript strict mode for type safety
