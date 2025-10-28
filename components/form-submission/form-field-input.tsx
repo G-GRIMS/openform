@@ -25,6 +25,7 @@ interface FormFieldInputProps {
     value: any;
     onChange: (value: any) => void;
     error?: string;
+    mode?: 'quick' | 'interactive';
 }
 
 export function FormFieldInput({
@@ -32,6 +33,7 @@ export function FormFieldInput({
     value,
     onChange,
     error,
+    mode = 'interactive',
 }: FormFieldInputProps) {
     const [fileName, setFileName] = useState<string>('');
 
@@ -88,7 +90,7 @@ export function FormFieldInput({
                             <SelectValue placeholder="Select an option" />
                         </SelectTrigger>
                         <SelectContent>
-                            {field.options?.map((option) => (
+                            {field.config.options?.map((option) => (
                                 <SelectItem key={option} value={option}>
                                     {option}
                                 </SelectItem>
@@ -100,17 +102,17 @@ export function FormFieldInput({
             case 'radio':
                 return (
                     <RadioGroup value={value || ''} onValueChange={onChange}>
-                        {field.options?.map((option) => (
+                        {field.config.options?.map((option) => (
                             <div
                                 key={option}
                                 className="flex items-center space-x-2"
                             >
                                 <RadioGroupItem
                                     value={option}
-                                    id={`${field.id}-${option}`}
+                                    id={`${field._id}-${option}`}
                                 />
                                 <Label
-                                    htmlFor={`${field.id}-${option}`}
+                                    htmlFor={`${field._id}-${option}`}
                                     className="cursor-pointer font-normal"
                                 >
                                     {option}
@@ -123,13 +125,13 @@ export function FormFieldInput({
             case 'checkbox':
                 return (
                     <div className="space-y-2">
-                        {field.options?.map((option) => (
+                        {field.config.options?.map((option) => (
                             <div
                                 key={option}
                                 className="flex items-center space-x-2"
                             >
                                 <Checkbox
-                                    id={`${field.id}-${option}`}
+                                    id={`${field._id}-${option}`}
                                     checked={value?.includes(option) || false}
                                     onCheckedChange={(checked) => {
                                         const currentValue = value || [];
@@ -145,7 +147,7 @@ export function FormFieldInput({
                                     }}
                                 />
                                 <Label
-                                    htmlFor={`${field.id}-${option}`}
+                                    htmlFor={`${field._id}-${option}`}
                                     className="cursor-pointer font-normal"
                                 >
                                     {option}
@@ -159,7 +161,7 @@ export function FormFieldInput({
                 return (
                     <div>
                         <label
-                            htmlFor={field.id}
+                            htmlFor={field._id}
                             className={`hover:bg-muted/50 flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors ${
                                 error ? 'border-destructive' : 'border-border'
                             }`}
@@ -170,17 +172,17 @@ export function FormFieldInput({
                                     {fileName ||
                                         'Click to upload or drag and drop'}
                                 </p>
-                                {field.maxSize && (
+                                {field.config.maxSize && (
                                     <p className="text-muted-foreground mt-1 text-xs">
-                                        Max size: {field.maxSize}MB
+                                        Max size: {field.config.maxSize}MB
                                     </p>
                                 )}
                             </div>
                             <input
-                                id={field.id}
+                                id={field._id}
                                 type="file"
                                 className="hidden"
-                                accept={field.acceptedFormats?.join(',')}
+                                accept={field.config.acceptedFormats?.join(',')}
                                 onChange={handleFileChange}
                             />
                         </label>
@@ -193,14 +195,17 @@ export function FormFieldInput({
     };
 
     return (
-        <div className="space-y-2">
-            <Label htmlFor={field.id}>
+        <div className={mode === 'quick' ? 'space-y-1' : 'space-y-2'}>
+            <Label
+                htmlFor={field._id}
+                className={mode === 'quick' ? 'text-sm' : ''}
+            >
                 {field.label}
                 {field.required && (
                     <span className="text-destructive ml-1">*</span>
                 )}
             </Label>
-            {field.description && (
+            {field.description && mode === 'interactive' && (
                 <div className="text-muted-foreground prose prose-sm max-w-none text-sm">
                     <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
