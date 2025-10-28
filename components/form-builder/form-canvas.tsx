@@ -131,13 +131,18 @@ export function FormCanvas({
                             ) : (
                                 fields.map((field, index) => (
                                     <div
-                                        key={field.id}
+                                        key={field._id || field.fieldKey}
                                         className={`group relative rounded-lg border p-4 transition-all ${
-                                            selectedFieldId === field.id
+                                            selectedFieldId ===
+                                            (field._id || field.fieldKey)
                                                 ? 'border-primary bg-primary/5'
                                                 : 'border-border bg-card hover:border-primary/50'
                                         }`}
-                                        onClick={() => onSelectField(field.id)}
+                                        onClick={() =>
+                                            onSelectField(
+                                                field._id || field.fieldKey,
+                                            )
+                                        }
                                     >
                                         {/* Field Content with inline logic indicator */}
                                         <div className="space-y-2">
@@ -151,7 +156,10 @@ export function FormCanvas({
                                                 variant="ghost"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    onOpenLogic?.(field.id);
+                                                    onOpenLogic?.(
+                                                        field._id ||
+                                                            field.fieldKey,
+                                                    );
                                                 }}
                                                 className="h-8 w-8 p-0"
                                                 title="Add conditional logic"
@@ -164,9 +172,9 @@ export function FormCanvas({
                                                     variant="ghost"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        onMoveField(
-                                                            field.id,
-                                                            'up',
+                                                        onDeleteField(
+                                                            field._id ||
+                                                                field.fieldKey,
                                                         );
                                                     }}
                                                     className="h-8 w-8 p-0"
@@ -195,7 +203,11 @@ export function FormCanvas({
                                                 variant="ghost"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    onDuplicateField(field.id);
+                                                    onMoveField(
+                                                        field._id ||
+                                                            field.fieldKey,
+                                                        'down',
+                                                    );
                                                 }}
                                                 className="h-8 w-8 p-0"
                                             >
@@ -206,7 +218,11 @@ export function FormCanvas({
                                                 variant="ghost"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    onDeleteField(field.id);
+                                                    onMoveField(
+                                                        field._id ||
+                                                            field.fieldKey,
+                                                        'up',
+                                                    );
                                                 }}
                                                 className="text-destructive hover:text-destructive h-8 w-8 p-0"
                                             >

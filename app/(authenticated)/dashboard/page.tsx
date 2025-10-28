@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FormCard } from '@/components/dashboard/form-card';
-import { getAllForms } from '@/lib/data/forms';
+import { useForms } from '@/lib/hooks/use-forms';
 
 export default function DashboardPage() {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -15,14 +15,17 @@ export default function DashboardPage() {
     >('all');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const forms = getAllForms();
+    // Get forms based on status filter
+    const status = statusFilter === 'all' ? undefined : statusFilter;
+    const formsQuery = useForms(status);
+    const forms = formsQuery?.page || [];
+
+    // Filter forms by search query (client-side filtering)
     const filteredForms = forms.filter((form) => {
-        const matchesStatus =
-            statusFilter === 'all' || form.status === statusFilter;
         const matchesSearch =
             form.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             form.description.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesStatus && matchesSearch;
+        return matchesSearch;
     });
 
     return (
@@ -94,7 +97,7 @@ export default function DashboardPage() {
                     }
                 >
                     {filteredForms.map((form) => (
-                        <FormCard key={form.id} form={form} />
+                        <FormCard key={form._id} form={form} />
                     ))}
                 </div>
             )}
