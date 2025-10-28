@@ -21,10 +21,13 @@ export const createForm = mutation({
         const userId = await ctx.auth.getUserIdentity();
         if (!userId) throw new Error('Unauthorized');
 
+        // Handle compound user IDs (split on pipe if present)
+        const convexUserId = userId.subject.split('|')[0];
+
         const now = Date.now();
 
         const formId = await ctx.db.insert('forms', {
-            userId: userId.subject as any,
+            userId: convexUserId as any,
             title: args.title,
             description: args.description,
             status: 'draft',

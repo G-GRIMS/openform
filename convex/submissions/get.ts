@@ -18,8 +18,11 @@ export const getSubmissions = query({
         const userId = await ctx.auth.getUserIdentity();
         if (!userId) throw new Error('Unauthorized');
 
+        // Handle compound user IDs (split on pipe if present)
+        const convexUserId = userId.subject.split('|')[0];
+
         const form = await ctx.db.get(args.formId);
-        if (!form || form.userId !== userId.subject) {
+        if (!form || form.userId !== convexUserId) {
             throw new Error('Form not found');
         }
 
@@ -47,11 +50,14 @@ export const getSubmission = query({
         const userId = await ctx.auth.getUserIdentity();
         if (!userId) throw new Error('Unauthorized');
 
+        // Handle compound user IDs (split on pipe if present)
+        const convexUserId = userId.subject.split('|')[0];
+
         const submission = await ctx.db.get(args.submissionId);
         if (!submission) throw new Error('Submission not found');
 
         const form = await ctx.db.get(submission.formId);
-        if (!form || form.userId !== userId.subject) {
+        if (!form || form.userId !== convexUserId) {
             throw new Error('Form not found');
         }
 
@@ -65,8 +71,11 @@ export const getSubmissionCount = query({
         const userId = await ctx.auth.getUserIdentity();
         if (!userId) throw new Error('Unauthorized');
 
+        // Handle compound user IDs (split on pipe if present)
+        const convexUserId = userId.subject.split('|')[0];
+
         const form = await ctx.db.get(args.formId);
-        if (!form || form.userId !== userId.subject) {
+        if (!form || form.userId !== convexUserId) {
             throw new Error('Form not found');
         }
 

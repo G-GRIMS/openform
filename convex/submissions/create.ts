@@ -24,6 +24,9 @@ export const submitForm = mutation({
 
         const userId = await ctx.auth.getUserIdentity();
 
+        // Handle compound user IDs (split on pipe if present)
+        const convexUserId = userId?.subject.split('|')[0];
+
         // Check authentication requirements
         if (form.settings.requireAuth && !userId) {
             throw new Error('Authentication required');
@@ -55,7 +58,7 @@ export const submitForm = mutation({
 
         const submissionId = await ctx.db.insert('submissions', {
             formId: args.formId,
-            userId: userId?.subject as any,
+            userId: convexUserId as any,
             data: args.data,
             metadata: {
                 userAgent: args.metadata?.userAgent,

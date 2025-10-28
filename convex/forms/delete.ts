@@ -7,8 +7,11 @@ export const deleteForm = mutation({
         const userId = await ctx.auth.getUserIdentity();
         if (!userId) throw new Error('Unauthorized');
 
+        // Handle compound user IDs (split on pipe if present)
+        const convexUserId = userId.subject.split('|')[0];
+
         const form = await ctx.db.get(args.formId);
-        if (!form || form.userId !== userId.subject) {
+        if (!form || form.userId !== convexUserId) {
             throw new Error('Form not found');
         }
 
@@ -101,8 +104,11 @@ export const duplicateForm = mutation({
         const userId = await ctx.auth.getUserIdentity();
         if (!userId) throw new Error('Unauthorized');
 
+        // Handle compound user IDs (split on pipe if present)
+        const convexUserId = userId.subject.split('|')[0];
+
         const originalForm = await ctx.db.get(args.formId);
-        if (!originalForm || originalForm.userId !== userId.subject) {
+        if (!originalForm || originalForm.userId !== convexUserId) {
             throw new Error('Form not found');
         }
 
@@ -110,7 +116,7 @@ export const duplicateForm = mutation({
 
         // Create new form
         const newFormId = await ctx.db.insert('forms', {
-            userId: userId.subject as any,
+            userId: convexUserId as any,
             title: `${originalForm.title} (Copy)`,
             description: originalForm.description,
             status: 'draft',

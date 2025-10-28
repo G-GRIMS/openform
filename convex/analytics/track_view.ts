@@ -17,6 +17,9 @@ export const trackFormView = mutation({
     handler: async (ctx, args) => {
         const userId = await ctx.auth.getUserIdentity();
 
+        // Handle compound user IDs (split on pipe if present)
+        const convexUserId = userId?.subject.split('|')[0];
+
         // Check if we've already tracked this session today
         const today = new Date().toISOString().split('T')[0];
         const existingView = await ctx.db
@@ -34,7 +37,7 @@ export const trackFormView = mutation({
         if (!existingView) {
             await ctx.db.insert('formViews', {
                 formId: args.formId,
-                userId: userId?.subject as any,
+                userId: convexUserId as any,
                 sessionId: args.sessionId,
                 timestamp: Date.now(),
                 metadata: {

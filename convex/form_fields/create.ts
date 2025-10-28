@@ -72,8 +72,11 @@ export const createField = mutation({
         const userId = await ctx.auth.getUserIdentity();
         if (!userId) throw new Error('Unauthorized');
 
+        // Handle compound user IDs (split on pipe if present)
+        const convexUserId = userId.subject.split('|')[0];
+
         const form = await ctx.db.get(args.formId);
-        if (!form || form.userId !== userId.subject) {
+        if (!form || form.userId !== convexUserId) {
             throw new Error('Form not found');
         }
 
