@@ -107,6 +107,12 @@ export function LoginForm({
                         ) {
                             errorMessage =
                                 'Network error. Please check your connection and try again.';
+                        } else if (
+                            message.includes('invalidsecret') ||
+                            message.includes('invalid secret') ||
+                            message.includes('InvalidSecret')
+                        ) {
+                            errorMessage = 'Email or password is incorrect.';
                         } else if (message.includes('password must contain')) {
                             // Password validation errors - provide helpful guidance
                             if (message.includes('8 characters')) {
@@ -137,6 +143,14 @@ export function LoginForm({
                             message.includes('name')
                         ) {
                             errorMessage = 'Please enter your name.';
+                        } else if (
+                            message.includes('auth') ||
+                            message.includes('token') ||
+                            message.includes('jwt') ||
+                            message.includes('session')
+                        ) {
+                            errorMessage =
+                                'Authentication service error. Please try again later or contact support if the problem persists.';
                         } else if (err.message) {
                             // For any other specific error messages, show them if they seem user-friendly
                             errorMessage = err.message;
