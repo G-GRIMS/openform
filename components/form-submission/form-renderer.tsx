@@ -14,7 +14,9 @@ interface FormRendererProps {
 }
 
 export function FormRenderer({ form }: FormRendererProps) {
-    const [viewMode, setViewMode] = useState<'quick' | 'interactive'>('quick');
+    const [viewMode, setViewMode] = useState<'quick' | 'interactive'>(
+        'interactive',
+    );
     const [formData, setFormData] = useState<Record<string, any>>({});
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitted, setIsSubmitted] = useState(false);
