@@ -17,9 +17,15 @@ export const getForms = query({
         const userId = await ctx.auth.getUserIdentity();
         if (!userId) throw new Error('Unauthorized');
 
+        // Handle compound user IDs (split on pipe if present)
+        const convexUserId = userId.subject.split('|')[0];
+
         let formsQuery = ctx.db
             .query('forms')
-            .withIndex('by_user', (q) => q.eq('userId', userId.subject as any));
+            .withIndex('by_user', (q) => q.eq('userId', convexUserId as any));
+
+        // Temporarily get all forms for debugging
+        // formsQuery = ctx.db.query('forms');
 
         if (args.status) {
             formsQuery = formsQuery.filter((q) => q.eq('status', args.status));
@@ -65,8 +71,16 @@ export const getFormWithFields = query({
         const userId = await ctx.auth.getUserIdentity();
         if (!userId) throw new Error('Unauthorized');
 
+        // Handle compound user IDs (split on pipe if present)
+        const convexUserId = userId.subject.split('|')[0];
+
         const form = await ctx.db.get(args.formId);
-        if (!form || form.userId !== userId.subject) {
+        if (!form) {
+            throw new Error('Form not found');
+        }
+
+        // Check if user owns this form
+        if (form.userId !== convexUserId) {
             throw new Error('Form not found');
         }
 
@@ -79,7 +93,7 @@ export const getFormWithFields = query({
         return {
             ...form,
             fields,
-        };
+        } as any;
     },
 });
 
@@ -87,7 +101,12 @@ export const getPublicForm = query({
     args: { formId: v.id('forms') },
     handler: async (ctx, args) => {
         const form = await ctx.db.get(args.formId);
-        if (!form || form.status !== 'published') {
+        if (!form) {
+            throw new Error('Form not found');
+        }
+
+        // Check if form is published
+        if (form.status !== 'published') {
             throw new Error('Form not found');
         }
 

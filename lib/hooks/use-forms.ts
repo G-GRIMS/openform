@@ -16,7 +16,7 @@ import type {
 export function useForms(status?: 'draft' | 'published' | 'archived') {
     const forms = useQuery(api.forms.get.getForms, {
         status,
-        paginationOpts: { numItems: 50 },
+        paginationOpts: { numItems: 50, cursor: null },
     });
     return forms;
 }
@@ -90,7 +90,7 @@ export function useSubmissions(
     const submissions = useQuery(api.submissions.get.getSubmissions, {
         formId,
         status,
-        paginationOpts: { numItems: 50 },
+        paginationOpts: { numItems: 50, cursor: null },
     });
     return submissions;
 }

@@ -2,76 +2,100 @@
 
 import type React from 'react';
 import { useState } from 'react';
-import type { Form } from '@/types/form';
+import { useSubmitForm, usePublicForm } from '@/lib/hooks/use-forms';
+import {
+    transformSubmissionData,
+    validateSubmission,
+} from '@/lib/utils/form-helpers';
 import { Button } from '@/components/ui/button';
+
 import { FormFieldInput } from './form-field-input';
 import { FormSuccess } from './form-success';
-import { PerFieldView } from '@/components/form-builder/per-field-view';
 import { LayoutGrid, LayoutList } from 'lucide-react';
+import type { Id } from '../../convex/_generated/dataModel';
 
 interface FormRendererProps {
-    form: Form;
+    formId: string;
 }
 
-export function FormRenderer({ form }: FormRendererProps) {
+export function FormRenderer({ formId }: FormRendererProps) {
+    const form = usePublicForm(formId as Id<'forms'>);
+    const submitForm = useSubmitForm();
+
     const [viewMode, setViewMode] = useState<'quick' | 'interactive'>(
         'interactive',
     );
     const [formData, setFormData] = useState<Record<string, any>>({});
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleFieldChange = (fieldId: string, value: any) => {
-        setFormData((prev) => ({ ...prev, [fieldId]: value }));
-        if (errors[fieldId]) {
+    const handleFieldChange = (fieldKey: string, value: any) => {
+        setFormData((prev) => ({ ...prev, [fieldKey]: value }));
+        if (errors[fieldKey]) {
             setErrors((prev) => {
                 const newErrors = { ...prev };
-                delete newErrors[fieldId];
+                delete newErrors[fieldKey];
                 return newErrors;
             });
         }
     };
 
-    const validateForm = (): boolean => {
-        const newErrors: Record<string, string> = {};
-
-        form.fields.forEach((field) => {
-            if (field.required) {
-                const value = formData[field.id];
-                if (!value || (Array.isArray(value) && value.length === 0)) {
-                    newErrors[field.id] = 'This field is required';
-                }
-            }
-        });
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (validateForm()) {
-            console.log('[OpenForm] Form submitted:', {
-                formId: form.id,
-                data: formData,
+        if (!form) return;
+
+        // Validate form data
+        const validationErrors = validateSubmission(formData, form.fields);
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+
+        try {
+            setIsSubmitting(true);
+            const transformedData = transformSubmissionData(
+                formData,
+                form.fields,
+            );
+
+            await submitForm({
+                formId: form._id,
+                data: transformedData,
             });
+
             setIsSubmitted(true);
+        } catch (error) {
+            console.error('Failed to submit form:', error);
+            setErrors({ submit: 'Failed to submit form. Please try again.' });
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
-    const handleReset = () => {
-        setFormData({});
-        setErrors({});
-        setIsSubmitted(false);
-    };
+    if (isSubmitted && form) {
+        return (
+            <FormSuccess
+                formTitle={form.title}
+                onReset={() => {
+                    setFormData({});
+                    setErrors({});
+                    setIsSubmitted(false);
+                }}
+            />
+        );
+    }
 
-    const handleValidationError = (fieldId: string, error: string) => {
-        setErrors((prev) => ({ ...prev, [fieldId]: error }));
-    };
-
-    if (isSubmitted) {
-        return <FormSuccess formTitle={form.title} onReset={handleReset} />;
+    if (!form) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <div className="text-center">
+                    <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2"></div>
+                    <p>Loading form...</p>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -108,56 +132,47 @@ export function FormRenderer({ form }: FormRendererProps) {
                         </Button>
                     </div>
 
-                    {viewMode === 'interactive' ? (
-                        <div className="h-[calc(100vh-12rem)]">
-                            <PerFieldView
-                                fields={form.fields}
-                                formTitle={form.title}
-                                formDescription={form.description}
-                                isBuilder={false}
-                                formData={formData}
-                                onFieldChange={handleFieldChange}
-                                errors={errors}
-                                onSubmit={handleSubmit}
-                                onValidationError={handleValidationError}
-                            />
+                    <div className="mx-auto max-w-2xl">
+                        <div className="mb-12">
+                            <h1 className="text-foreground mb-3 text-4xl font-bold">
+                                {form.title}
+                            </h1>
+                            <p className="text-muted-foreground text-lg leading-relaxed">
+                                {form.description}
+                            </p>
                         </div>
-                    ) : (
-                        <div className="mx-auto max-w-2xl">
-                            <div className="mb-12">
-                                <h1 className="text-foreground mb-3 text-4xl font-bold">
-                                    {form.title}
-                                </h1>
-                                <p className="text-muted-foreground text-lg leading-relaxed">
-                                    {form.description}
-                                </p>
-                            </div>
 
-                            <form onSubmit={handleSubmit} className="space-y-8">
-                                {form.fields.map((field) => (
-                                    <FormFieldInput
-                                        key={field.id}
-                                        field={field}
-                                        value={formData[field.id]}
-                                        onChange={(value) =>
-                                            handleFieldChange(field.id, value)
-                                        }
-                                        error={errors[field.id]}
-                                    />
-                                ))}
+                        <form onSubmit={handleSubmit} className="space-y-8">
+                            {form.fields.map((field: any) => (
+                                <FormFieldInput
+                                    key={field.fieldKey}
+                                    field={field}
+                                    value={formData[field.fieldKey]}
+                                    onChange={(value) =>
+                                        handleFieldChange(field.fieldKey, value)
+                                    }
+                                    error={errors[field.fieldKey]}
+                                />
+                            ))}
 
-                                <div className="pt-6">
-                                    <Button
-                                        type="submit"
-                                        size="lg"
-                                        className="w-full"
-                                    >
-                                        Submit
-                                    </Button>
+                            {errors.submit && (
+                                <div className="text-destructive text-center text-sm">
+                                    {errors.submit}
                                 </div>
-                            </form>
-                        </div>
-                    )}
+                            )}
+
+                            <div className="pt-6">
+                                <Button
+                                    type="submit"
+                                    size="lg"
+                                    className="w-full"
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? 'Submitting...' : 'Submit'}
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
 import {
     ArrowLeft,
@@ -19,22 +20,42 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { getFormById } from '@/lib/data/forms';
-import { getSubmissionsByFormId } from '@/lib/data/submissions';
-import { getAnalyticsByFormId } from '@/lib/data/analytics';
+import { LoadingSkeleton } from '@/components/ui/loading-skeleton';
+import { AsyncErrorBoundary } from '@/components/ui/error-boundary';
+import { useForm, useSubmissions, useFormMetrics } from '@/lib/hooks/use-forms';
 import { notFound } from 'next/navigation';
+import type { Id } from '../../../convex/_generated/dataModel';
 
-export default async function FormManagementPage({
+export default function FormManagementPage({
     params,
 }: {
     params: Promise<{ id: string }>;
 }) {
-    const { id } = await params;
-    const form = getFormById(id);
-    const submissions = getSubmissionsByFormId(id);
-    const analytics = getAnalyticsByFormId(id);
+    const { id } = React.use(params);
 
-    if (!form) {
+    const formQuery = useForm(id as Id<'forms'>);
+    const submissionsQuery = useSubmissions(id as Id<'forms'>);
+    const analyticsQuery = useFormMetrics(id as Id<'forms'>);
+
+    const form = formQuery;
+    const submissions = submissionsQuery?.page || [];
+    const analytics = analyticsQuery;
+
+    // Handle loading and error states
+    const isLoading = formQuery === undefined;
+    const hasError = formQuery === null;
+
+    if (isLoading) {
+        return (
+            <div className="container mx-auto px-6 py-8">
+                <LoadingSkeleton className="mb-6 h-8 w-64" />
+                <LoadingSkeleton variant="card" />
+            </div>
+        );
+    }
+
+    if (hasError) {
+        console.error('Form not found or error:', { formQuery, form });
         notFound();
     }
 
@@ -67,7 +88,7 @@ export default async function FormManagementPage({
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Link href={`/f/${form.id}`} target="_blank">
+                    <Link href={`/f/${form._id}`} target="_blank">
                         <Button
                             variant="outline"
                             size="sm"
@@ -77,7 +98,7 @@ export default async function FormManagementPage({
                             Preview
                         </Button>
                     </Link>
-                    <Link href={`/dashboard/${form.id}/edit`}>
+                    <Link href={`/dashboard/${form._id}/edit`}>
                         <Button size="sm" className="gap-2">
                             <Edit className="h-4 w-4" />
                             Edit Form
@@ -103,7 +124,18 @@ export default async function FormManagementPage({
                 </TabsList>
 
                 <TabsContent value="analytics" className="space-y-6">
-                    {analytics ? (
+                    {analyticsQuery.isLoading ? (
+                        <div className="grid gap-6 md:grid-cols-4">
+                            {Array.from({ length: 4 }).map((_, i) => (
+                                <Card key={i}>
+                                    <CardHeader className="pb-3">
+                                        <LoadingSkeleton className="mb-2 h-4 w-20" />
+                                        <LoadingSkeleton className="h-8 w-16" />
+                                    </CardHeader>
+                                </Card>
+                            ))}
+                        </div>
+                    ) : analytics ? (
                         <>
                             <div className="grid gap-6 md:grid-cols-4">
                                 <Card>
@@ -112,7 +144,7 @@ export default async function FormManagementPage({
                                             Total Views
                                         </CardDescription>
                                         <CardTitle className="text-3xl">
-                                            {analytics.views}
+                                            {analytics.totalViews || 0}
                                         </CardTitle>
                                     </CardHeader>
                                 </Card>
@@ -122,7 +154,7 @@ export default async function FormManagementPage({
                                             Submissions
                                         </CardDescription>
                                         <CardTitle className="text-3xl">
-                                            {analytics.submissions}
+                                            {analytics.totalSubmissions || 0}
                                         </CardTitle>
                                     </CardHeader>
                                 </Card>
@@ -132,7 +164,7 @@ export default async function FormManagementPage({
                                             Completion Rate
                                         </CardDescription>
                                         <CardTitle className="text-3xl">
-                                            {analytics.completionRate}%
+                                            {analytics.completionRate || 0}%
                                         </CardTitle>
                                     </CardHeader>
                                 </Card>
@@ -142,7 +174,7 @@ export default async function FormManagementPage({
                                             Avg. Time
                                         </CardDescription>
                                         <CardTitle className="text-3xl">
-                                            {analytics.averageTime}s
+                                            {analytics.averageTime || 0}s
                                         </CardTitle>
                                     </CardHeader>
                                 </Card>
@@ -180,12 +212,30 @@ export default async function FormManagementPage({
                         <CardHeader>
                             <CardTitle>Recent Submissions</CardTitle>
                             <CardDescription>
-                                {submissions.length} total submission
-                                {submissions.length !== 1 ? 's' : ''}
+                                {submissionsQuery.isLoading
+                                    ? 'Loading...'
+                                    : `${submissions.length} total submission${
+                                          submissions.length !== 1 ? 's' : ''
+                                      }`}
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {submissions.length === 0 ? (
+                            {submissionsQuery.isLoading ? (
+                                <div className="space-y-4">
+                                    {Array.from({ length: 3 }).map((_, i) => (
+                                        <div
+                                            key={i}
+                                            className="rounded-lg border p-4"
+                                        >
+                                            <LoadingSkeleton className="mb-2 h-4 w-32" />
+                                            <div className="space-y-2">
+                                                <LoadingSkeleton className="h-3 w-full" />
+                                                <LoadingSkeleton className="h-3 w-3/4" />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : submissions.length === 0 ? (
                                 <div className="text-muted-foreground flex h-[300px] items-center justify-center">
                                     No submissions yet
                                 </div>
@@ -195,13 +245,15 @@ export default async function FormManagementPage({
                                         .slice(0, 10)
                                         .map((submission) => (
                                             <div
-                                                key={submission.id}
+                                                key={submission._id}
                                                 className="rounded-lg border p-4"
                                             >
                                                 <div className="mb-2 flex items-center justify-between">
                                                     <span className="text-sm font-medium">
                                                         Submission #
-                                                        {submission.id}
+                                                        {submission._id.slice(
+                                                            -8,
+                                                        )}
                                                     </span>
                                                     <span className="text-muted-foreground text-xs">
                                                         {new Date(
@@ -213,17 +265,17 @@ export default async function FormManagementPage({
                                                     {Object.entries(
                                                         submission.data,
                                                     ).map(
-                                                        ([fieldId, value]) => {
+                                                        ([fieldKey, value]) => {
                                                             const field =
-                                                                form.fields.find(
+                                                                form.fields?.find(
                                                                     (f) =>
-                                                                        f.id ===
-                                                                        fieldId,
+                                                                        f.fieldKey ===
+                                                                        fieldKey,
                                                                 );
                                                             return (
                                                                 <div
                                                                     key={
-                                                                        fieldId
+                                                                        fieldKey
                                                                     }
                                                                     className="flex gap-2"
                                                                 >
@@ -285,8 +337,8 @@ export default async function FormManagementPage({
                                 </label>
                                 <p className="text-muted-foreground mt-1 text-sm">
                                     {typeof window !== 'undefined'
-                                        ? `${window.location.origin}/f/${form.id}`
-                                        : `/f/${form.id}`}
+                                        ? `${window.location.origin}/f/${form._id}`
+                                        : `/f/${form._id}`}
                                 </p>
                             </div>
                             <div>
