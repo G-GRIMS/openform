@@ -95,7 +95,7 @@ export default function LandingPageInner() {
                         <div className="text-center">
                             <motion.h1
                                 className={cn(
-                                    'text-5xl leading-tight font-medium tracking-tight',
+                                    'text-4xl leading-tight font-medium tracking-tight md:text-5xl',
                                     lora.className,
                                 )}
                                 initial={{ opacity: 0, y: 20 }}
