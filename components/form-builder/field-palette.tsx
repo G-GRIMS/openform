@@ -42,7 +42,7 @@ export function FieldPalette({ onAddField }) {
                 </p>
             </div>
 
-            <div className="flex-1 space-y-2 overflow-y-auto p-3">
+            <div className="flex-1 space-y-3 overflow-y-auto p-3">
                 {FIELD_TYPES.map(({ type, label, icon: Icon }) => (
                     <Button
                         key={type}

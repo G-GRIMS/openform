@@ -9,7 +9,7 @@ import { LogicPanel } from './logic-panel';
 import { Button } from '@/components/ui/button';
 import { Eye } from 'lucide-react';
 
-export function FormBuilder() {
+export function FormBuilder({ initialForm }: { initialForm?: any }) {
     const [fields, setFields] = useState([]);
     const [selectedFieldId, setSelectedFieldId] = useState(null);
     const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -20,7 +20,7 @@ export function FormBuilder() {
     const [viewMode, setViewMode] = useState('quick'); // Changed default viewMode from "full" to "quick"
     const [logicPanelFieldId, setLogicPanelFieldId] = useState(null);
 
-    const addField = (fieldType) => {
+    const addField = (fieldType: string) => {
         const newField = {
             id: `field-${Date.now()}`,
             type: fieldType,
