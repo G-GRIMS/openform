@@ -2,8 +2,12 @@ import { notFound } from 'next/navigation';
 import { FormRenderer } from '@/components/form-submission/form-renderer';
 import { getFormById } from '@/lib/data/forms';
 
-export default function PublicFormPage({ params }: { params: { id: string } }) {
-    const { id } = params;
+export default async function PublicFormPage({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id } = await params;
     const form = getFormById(id);
 
     if (!form) {

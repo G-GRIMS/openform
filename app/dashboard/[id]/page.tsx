@@ -24,12 +24,12 @@ import { getSubmissionsByFormId } from '@/lib/data/submissions';
 import { getAnalyticsByFormId } from '@/lib/data/analytics';
 import { notFound } from 'next/navigation';
 
-export default function FormManagementPage({
+export default async function FormManagementPage({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-    const { id } = params;
+    const { id } = await params;
     const form = getFormById(id);
     const submissions = getSubmissionsByFormId(id);
     const analytics = getAnalyticsByFormId(id);
