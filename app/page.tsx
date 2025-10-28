@@ -10,6 +10,7 @@ import {
     Mail,
     Instagram,
 } from 'lucide-react';
+import Image from 'next/image';
 import { Fragment } from 'react';
 
 export default function LandingPage() {
@@ -64,31 +65,45 @@ export default function LandingPage() {
                 </header>
 
                 {/* Hero Section */}
-                <section className="containerd px-6 py-20 text-center">
-                    <h1 className="text-5xl leading-tight font-medium tracking-tight">
-                        Build Beautiful Forms
-                        <br />
-                        <span className="text-muted-foreground">
-                            In Minutes, Not Hours
-                        </span>
-                    </h1>
-                    <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg leading-relaxed">
-                        An open-source form builder with a focus on simplicity
-                        and flexibility. Create stunning forms with our
-                        intuitive drag-and-drop interface and powerful features.
-                    </p>
-                    <div className="mt-8 flex items-center justify-center gap-4">
-                        <Link href="/dashboard/new">
-                            <Button size="lg" className="gap-2">
-                                Create Your First Form
-                                <ArrowRight className="h-4 w-4" />
-                            </Button>
-                        </Link>
-                        <Link href="/f/contact-form">
-                            <Button size="lg" variant="outline">
-                                View Demo
-                            </Button>
-                        </Link>
+                <section className="containerd px-6 py-20">
+                    <div className="flex flex-col items-center gap-8">
+                        <div className="text-center">
+                            <h1 className="text-5xl leading-tight font-medium tracking-tight">
+                                Build Beautiful Forms
+                                <br />
+                                <span className="text-muted-foreground">
+                                    In Minutes, Not Hours
+                                </span>
+                            </h1>
+                            <p className="text-muted-foreground mx-auto mt-6 max-w-2xl text-lg leading-relaxed md:mx-0">
+                                An open-source form builder with a focus on
+                                simplicity and flexibility. Create stunning
+                                forms with our intuitive drag-and-drop interface
+                                and powerful features.
+                            </p>
+                            <div className="mt-8 flex items-center justify-center gap-4">
+                                <Link href="/dashboard/new">
+                                    <Button size="lg" className="gap-2">
+                                        Create Your First Form
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Button>
+                                </Link>
+                                <Link href="/f/contact-form">
+                                    <Button size="lg" variant="outline">
+                                        View Demo
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+                        <div>
+                            <Image
+                                src="/preview.jpg"
+                                alt="Dashboard Preview"
+                                width={800}
+                                height={600}
+                                className="h-auto w-full rounded-lg shadow-lg"
+                            />
+                        </div>
                     </div>
                 </section>
 
