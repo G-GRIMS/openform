@@ -1,13 +1,11 @@
 import { ConvexAuthNextjsServerProvider } from '@convex-dev/auth/nextjs/server';
-
 import type { Metadata } from 'next';
-
 import { Analytics } from '@vercel/analytics/next';
-import './globals.css';
-
 import { cn } from '@/lib/utils';
 import { manrope } from '@/lib/fonts';
 import { ConvexClientProvider } from '@/components/providers/convex-client-provider';
+import { Toaster } from '@/components/ui/sonner';
+import './globals.css';
 
 export const metadata: Metadata = {
     title: "G'GRIMS OpenForm",
@@ -29,6 +27,7 @@ export default function RootLayout({
                 >
                     <ConvexClientProvider>{children}</ConvexClientProvider>
                     <Analytics />
+                    <Toaster />
                 </body>
             </html>
         </ConvexAuthNextjsServerProvider>
