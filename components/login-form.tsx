@@ -34,11 +34,51 @@ export function LoginForm({
                     const formData = new FormData(event.currentTarget);
                     await signIn('password', formData);
                 } catch (err) {
-                    setError(
-                        err instanceof Error
-                            ? err.message
-                            : 'An error occurred',
-                    );
+                    // Map technical errors to user-friendly messages
+                    let errorMessage =
+                        'An unexpected error occurred. Please try again.';
+
+                    if (err instanceof Error) {
+                        const message = err.message.toLowerCase();
+
+                        if (
+                            message.includes('invalidaccountid') ||
+                            message.includes('invalid credentials') ||
+                            message.includes('wrong password')
+                        ) {
+                            errorMessage =
+                                'Invalid email or password. Please check your credentials and try again.';
+                        } else if (
+                            message.includes('account not found') ||
+                            message.includes('user not found')
+                        ) {
+                            errorMessage =
+                                'Invalid email or password. Please check your credentials and try again.';
+                        } else if (
+                            message.includes('email not verified') ||
+                            message.includes('unverified')
+                        ) {
+                            errorMessage =
+                                'Please verify your email address before signing in.';
+                        } else if (
+                            message.includes('too many attempts') ||
+                            message.includes('rate limit')
+                        ) {
+                            errorMessage =
+                                'Too many login attempts. Please wait a few minutes before trying again.';
+                        } else if (
+                            message.includes('network') ||
+                            message.includes('connection')
+                        ) {
+                            errorMessage =
+                                'Network error. Please check your connection and try again.';
+                        } else if (err.message) {
+                            // For any other specific error messages, show them if they seem user-friendly
+                            errorMessage = err.message;
+                        }
+                    }
+
+                    setError(errorMessage);
                 } finally {
                     setIsLoading(false);
                 }

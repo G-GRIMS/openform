@@ -35,11 +35,40 @@ export function PasswordReset({
                             await signIn('password', formData);
                             setStep({ email: formData.get('email') as string });
                         } catch (err) {
-                            setError(
-                                err instanceof Error
-                                    ? err.message
-                                    : 'An error occurred',
-                            );
+                            // Map technical errors to user-friendly messages
+                            let errorMessage =
+                                'An unexpected error occurred. Please try again.';
+
+                            if (err instanceof Error) {
+                                const message = err.message.toLowerCase();
+
+                                if (
+                                    message.includes('invalidaccountid') ||
+                                    message.includes('account not found') ||
+                                    message.includes('user not found')
+                                ) {
+                                    // For password reset, we don't want to reveal if email exists
+                                    errorMessage =
+                                        "If an account with this email exists, we've sent a password reset link.";
+                                } else if (
+                                    message.includes('network') ||
+                                    message.includes('connection')
+                                ) {
+                                    errorMessage =
+                                        'Network error. Please check your connection and try again.';
+                                } else if (
+                                    message.includes('rate limit') ||
+                                    message.includes('too many')
+                                ) {
+                                    errorMessage =
+                                        'Too many requests. Please wait a few minutes before trying again.';
+                                } else if (err.message) {
+                                    // For any other specific error messages, show them if they seem user-friendly
+                                    errorMessage = err.message;
+                                }
+                            }
+
+                            setError(errorMessage);
                         } finally {
                             setIsLoading(false);
                         }
@@ -104,11 +133,45 @@ export function PasswordReset({
                             const formData = new FormData(event.currentTarget);
                             await signIn('password', formData);
                         } catch (err) {
-                            setError(
-                                err instanceof Error
-                                    ? err.message
-                                    : 'An error occurred',
-                            );
+                            // Map technical errors to user-friendly messages
+                            let errorMessage =
+                                'An unexpected error occurred. Please try again.';
+
+                            if (err instanceof Error) {
+                                const message = err.message.toLowerCase();
+
+                                if (
+                                    message.includes('invalid') ||
+                                    message.includes('expired') ||
+                                    message.includes('token')
+                                ) {
+                                    errorMessage =
+                                        'Invalid or expired reset code. Please request a new one.';
+                                } else if (
+                                    message.includes('password') &&
+                                    message.includes('weak')
+                                ) {
+                                    errorMessage =
+                                        'Password is too weak. Please choose a stronger password.';
+                                } else if (
+                                    message.includes('network') ||
+                                    message.includes('connection')
+                                ) {
+                                    errorMessage =
+                                        'Network error. Please check your connection and try again.';
+                                } else if (
+                                    message.includes('rate limit') ||
+                                    message.includes('too many')
+                                ) {
+                                    errorMessage =
+                                        'Too many attempts. Please wait a few minutes before trying again.';
+                                } else if (err.message) {
+                                    // For any other specific error messages, show them if they seem user-friendly
+                                    errorMessage = err.message;
+                                }
+                            }
+
+                            setError(errorMessage);
                         } finally {
                             setIsLoading(false);
                         }
