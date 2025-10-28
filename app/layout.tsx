@@ -1,3 +1,5 @@
+import { ConvexAuthNextjsServerProvider } from '@convex-dev/auth/nextjs/server';
+
 import type { Metadata } from 'next';
 
 import { Analytics } from '@vercel/analytics/next';
@@ -5,6 +7,7 @@ import './globals.css';
 
 import { cn } from '@/lib/utils';
 import { manrope } from '@/lib/fonts';
+import { ConvexClientProvider } from '@/components/providers/convex-client-provider';
 
 export const metadata: Metadata = {
     title: "G'GRIMS OpenForm",
@@ -19,11 +22,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body className={cn(`font-sans antialiased`, manrope.className)}>
-                {children}
-                <Analytics />
-            </body>
-        </html>
+        <ConvexAuthNextjsServerProvider>
+            <html lang="en">
+                <body
+                    className={cn(`font-sans antialiased`, manrope.className)}
+                >
+                    <ConvexClientProvider>{children}</ConvexClientProvider>
+                    <Analytics />
+                </body>
+            </html>
+        </ConvexAuthNextjsServerProvider>
     );
 }
