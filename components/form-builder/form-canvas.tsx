@@ -141,23 +141,6 @@ export function FormCanvas({
                                     >
                                         {/* Field Content with inline logic indicator */}
                                         <div className="space-y-2">
-                                            <div className="flex items-center gap-2">
-                                                <label className="text-foreground text-sm font-medium">
-                                                    {field.label}
-                                                    {field.required && (
-                                                        <span className="text-destructive ml-1">
-                                                            *
-                                                        </span>
-                                                    )}
-                                                </label>
-                                                {field.logic &&
-                                                    field.logic.length > 0 && (
-                                                        <div className="bg-primary/10 text-primary flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium">
-                                                            <Zap className="h-3 w-3" />
-                                                            Logic
-                                                        </div>
-                                                    )}
-                                            </div>
                                             <FormField field={field} />
                                         </div>
 
