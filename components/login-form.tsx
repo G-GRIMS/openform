@@ -21,6 +21,41 @@ export function LoginForm({
     const [step, setStep] = useState<'signUp' | 'signIn'>('signIn');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [passwordStrength, setPasswordStrength] = useState<{
+        score: number;
+        feedback: string[];
+    }>({ score: 0, feedback: [] });
+
+    const calculatePasswordStrength = (password: string) => {
+        let score = 0;
+        const feedback: string[] = [];
+
+        if (password.length >= 8) {
+            score += 1;
+        } else {
+            feedback.push('At least 8 characters');
+        }
+
+        if (/[a-z]/.test(password)) {
+            score += 1;
+        } else {
+            feedback.push('One lowercase letter');
+        }
+
+        if (/[A-Z]/.test(password)) {
+            score += 1;
+        } else {
+            feedback.push('One uppercase letter');
+        }
+
+        if (/\d/.test(password)) {
+            score += 1;
+        } else {
+            feedback.push('One number');
+        }
+
+        setPasswordStrength({ score, feedback });
+    };
 
     return (
         <form
@@ -72,6 +107,36 @@ export function LoginForm({
                         ) {
                             errorMessage =
                                 'Network error. Please check your connection and try again.';
+                        } else if (message.includes('password must contain')) {
+                            // Password validation errors - provide helpful guidance
+                            if (message.includes('8 characters')) {
+                                errorMessage =
+                                    'Password must be at least 8 characters long.';
+                            } else if (message.includes('lowercase')) {
+                                errorMessage =
+                                    'Password must include at least one lowercase letter (a-z).';
+                            } else if (message.includes('uppercase')) {
+                                errorMessage =
+                                    'Password must include at least one uppercase letter (A-Z).';
+                            } else if (message.includes('number')) {
+                                errorMessage =
+                                    'Password must include at least one number (0-9).';
+                            } else {
+                                errorMessage =
+                                    'Password does not meet security requirements. Please ensure it has at least 8 characters with uppercase, lowercase, and numeric characters.';
+                            }
+                        } else if (
+                            message.includes('email') &&
+                            (message.includes('valid') ||
+                                message.includes('format'))
+                        ) {
+                            errorMessage =
+                                'Please enter a valid email address.';
+                        } else if (
+                            message.includes('name is required') ||
+                            message.includes('name')
+                        ) {
+                            errorMessage = 'Please enter your name.';
                         } else if (err.message) {
                             // For any other specific error messages, show them if they seem user-friendly
                             errorMessage = err.message;
@@ -137,7 +202,54 @@ export function LoginForm({
                         name="password"
                         type="password"
                         required
+                        onChange={(e) => {
+                            if (step === 'signUp') {
+                                calculatePasswordStrength(e.target.value);
+                            }
+                        }}
                     />
+                    {step === 'signUp' &&
+                        passwordStrength.feedback.length > 0 && (
+                            <div className="mt-2 space-y-1">
+                                <div className="flex gap-1">
+                                    {[1, 2, 3, 4].map((level) => (
+                                        <div
+                                            key={level}
+                                            className={cn(
+                                                'h-1 flex-1 rounded-full transition-colors',
+                                                passwordStrength.score >= level
+                                                    ? passwordStrength.score <=
+                                                      2
+                                                        ? 'bg-red-500'
+                                                        : passwordStrength.score ===
+                                                            3
+                                                          ? 'bg-yellow-500'
+                                                          : 'bg-green-500'
+                                                    : 'bg-gray-200',
+                                            )}
+                                        />
+                                    ))}
+                                </div>
+                                <div className="text-muted-foreground text-xs">
+                                    Password requirements:
+                                    <ul className="mt-1 space-y-0.5">
+                                        {passwordStrength.feedback.map(
+                                            (req, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="flex items-center gap-1"
+                                                >
+                                                    <span className="text-red-500">
+                                                        •
+                                                    </span>
+                                                    {req}
+                                                </li>
+                                            ),
+                                        )}
+                                    </ul>
+                                </div>
+                            </div>
+                        )}
                 </Field>
                 <input name="flow" type="hidden" value={step} />
                 {error && (
